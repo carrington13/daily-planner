@@ -110,8 +110,10 @@ const startHourInterval = function(minutesLeft) {
     hourInterval();
   }, minutesLeft)
 }
-$(".row").on("blur", "textarea", function () {
 
+// text add/edit event clicker
+
+$(".row").on("blur", "textarea", function () {
   // get <textarea> value
   var text = $(this).val().trim()
   
@@ -124,7 +126,7 @@ $(".row").on("blur", "textarea", function () {
   tasks[hour].text = text;
 })
 
-// eventHandler for SaveButtons 
+// Save Buttons' event handler 
 $('.saveBtn').on("click", function() {    
   saveTask();
 });
