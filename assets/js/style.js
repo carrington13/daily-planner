@@ -14,26 +14,31 @@ let tasks = {
 // Save Task To Storage With Save button
   // When Save Button Is Clicked
 const saveTask = function() {
-  // Select container div by hourId
-  // Text for that hour is saved to localStorage
+  localStorage.setItem("tasks", JSON.stringify(tasks));
   
 
 }
 
 const loadTasks = function () {
-// // Load Task From Storage
-//   // When Page Loads
-//   tasks = JSON.parse(localStorage.getItem("tasks"));
-//   // All Saved Tasks will load into their correct Hour Block
-//   // If Day has changed, then 
-//   // alert that day has passed
-//   // confirm is user wants to load yesterdays tasks
-//   // Yes => loadTasks()
-//   // No => load page without loading tasks
-
-//   $.each(tasks, function () {
-
-//   })
+  // Convert storage back into usable data, push it to tasks
+  tasks = JSON.parse(localStorage.getItem("tasks"));
+  
+  //loop over object properties
+  for (const property in tasks) {
+    // debugger;
+    let divId = property;
+    // find container el related to each property
+    let containerEl = $("#" + divId);
+    
+    // find textarea child of containerEl
+    let textareaEl = $(containerEl.find('textarea'));
+    console.log(textareaEl);
+    // set text as currentProperty.text value 
+    let text = tasks[property].text.trim();
+    console.log(text);
+    
+    $(textareaEl).text(text);
+  }
 }
 
 
@@ -64,8 +69,9 @@ const loadTasks = function () {
 //   .attr("id");  
 // });
 
-$(".row").on("click", "#textarea", function(){
-  //get task(<p>) current value/text
+// add and update text
+$(".row").on("click", "textarea", function(){
+  // get current text from textarea
   var text = $(this).val().trim();
   
   // create textarea el
@@ -73,35 +79,33 @@ $(".row").on("click", "#textarea", function(){
   .addClass("textarea col-10 past")
   .val(text);
   
-  // replace <p> with <textarea>
+  // replace with <textarea>
   $(this).replaceWith(textInput);
   textInput.trigger("focus");
-
 });
 
-$(".row").on("blur", "textarea", function () {  
+$(".row").on("focusout", "textarea", function () {
+
   // get <textarea> value
   var text = $(this).val().trim()
   
   // get task's container's id 
-  var status = $(this)
+  var hour = $(this)
     .closest(".row")
     .attr("id");  
 
   
-  tasks[status].text = text;
-  console.log(tasks);
-
-  // recreate <p>
-  var taskP = $("<p>")
-  .addClass("textarea col-10 past")
-  .text(text);
-
-  $(this).replaceWith(taskP);
+  tasks[hour].text = text;
 })
 
 // eventHandler for SaveButtons 
 $('.saveBtn').on("click", function() {
-    saveTask();
+  // find id of hour task is located
+  // let hour = $(this)
+  //   .closest(".row")
+  //   .attr("id");
+    
+  saveTask();
 });
 
+loadTasks();
