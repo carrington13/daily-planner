@@ -51,11 +51,13 @@ const loadTasks = function () {
       $(textareaEl).text(text);
     }
   }
+  currentDay();
+  hourInterval();
 }
 
 
 // Function Current Day
-let currentDay = function () {
+const currentDay = function () {
   // set now as current time for user
   let now = dayjs();
   // change format for display to user
@@ -69,7 +71,7 @@ let currentDay = function () {
 }
 
 // Function to audit task by hour
-let auditHour = function (currentHour) {
+const auditHour = function (currentHour) {
   for (const property in tasks) {
     // find container el related to each property
     let containerEl = $("#" + property);
@@ -95,32 +97,23 @@ let auditHour = function (currentHour) {
 }
 
 // setInterval Function to audit hourly
-const hourInterval = setInterval (function() {
-  let time = dayjs().get('hour');
-  auditHour(time);
-}, (1000 * 60) * 60);
+const hourInterval = function () {
 
-// !!! Potentially Obsolete, further testing required.
-// // Task Creation and Editing
-// $(".row").on("click", "textarea", function(){
-//   // get current text from textarea
-//   var text = $(this).val().trim();
-  
-//   // create textarea el
-//   var textInput = $("<textarea>")
-//   .addClass("textarea col-10")
-//   .val(text);
-  
-//   // replace with <textarea>
-//   $(this).replaceWith(textInput);
-//   textInput.trigger("focus");
-// });
+  if (dayjs().get('minute') === 0) {
+    setInterval (function() {
 
-// $(".row").on("click", "textarea", function () {
-//   var text = $(this).val().trim();
+      let time = dayjs().get('hour');
 
-//   text.trigger('focus');
-// })
+      auditHour(time);
+    }, (1000));
+  } else {
+    let minutesLeft = 61 - dayjs().get('minute')
+    console.log(minutesLeft);
+    setTimeout (function() {
+      hourInterval();
+    }, (1000 * 60) * minutesLeft )
+  }
+}
 
 $(".row").on("blur", "textarea", function () {
 
@@ -142,5 +135,4 @@ $('.saveBtn').on("click", function() {
 });
 
 loadTasks();
-currentDay();
-hourInterval();
+
