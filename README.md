@@ -15,10 +15,10 @@ A daily schedule manager for a standard work day (9-5) that users can fill out. 
     * Google Fonts
 
 ## Url
-
+https://carrington13.github.io/daily-planner/
 
 ## Screenshot
-
+![screenshot](assets/images/screenshot.png)
 
 ## Contributions
 Starter index and stylesheet provided. 

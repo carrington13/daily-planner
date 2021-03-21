@@ -52,7 +52,6 @@ const loadTasks = function () {
     }
   }
   currentDay();
-  hourInterval();
 }
 
 
@@ -68,6 +67,8 @@ const currentDay = function () {
   let hour = dayjs().get('hour');
   // send it to auditTask
   auditHour(hour);
+  let minutesLeft = 60 - dayjs().get('minutes');
+  startHourInterval(minutesLeft)
 }
 
 // Function to audit task by hour
@@ -97,24 +98,18 @@ const auditHour = function (currentHour) {
 }
 
 // setInterval Function to audit hourly
-const hourInterval = function () {
-
-  if (dayjs().get('minute') === 0) {
-    setInterval (function() {
-
-      let time = dayjs().get('hour');
-
-      auditHour(time);
-    }, (1000));
-  } else {
-    let minutesLeft = 61 - dayjs().get('minute')
-    console.log(minutesLeft);
-    setTimeout (function() {
-      hourInterval();
-    }, (1000 * 60) * minutesLeft )
-  }
+const hourInterval = function() {
+  setInterval (function() {
+    let time = dayjs().get('hour');
+    auditHour(time);
+  }, (1000 * 60) * 60);
 }
-
+// function to begin hourInterval when hour changes
+const startHourInterval = function(minutesLeft) {
+  setTimeout (function(){
+    hourInterval();
+  }, minutesLeft)
+}
 $(".row").on("blur", "textarea", function () {
 
   // get <textarea> value
